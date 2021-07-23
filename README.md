@@ -32,3 +32,25 @@ Using the backend API created in the backend test, build a ReactJS web app to di
 The app should consist of an single listing page displaying the name, image, city and stars for each hotel.
 The design is completely up to you but don't worry too much about it, something very simple is fine. Feel free to use for example bootstrap css classes or any design template.
 
+## Install and run
+
+### Backend
+
+- `cd backend && cp .env.example .env`
+- `docker-compose run --rm hotels-php-cli composer install`
+- `docker-compose run --rm hotels-php-cli php artisan key:generate`
+- `docker-compose run --rm hotels-php-cli php artisan storage:link`
+- `docker-compose run --rm hotels-php-cli php artisan migrate`
+- `docker-compose run --rm hotels-php-cli php artisan import:hotels`
+
+----
+
+- `docker-compose up --build -d` - **Start server**
+
+### Frontend (cd frontend)
+
+- `npm install`
+- `cp .env.example .env.local`
+- `npm start` - listen http://localhost:3000
+
+

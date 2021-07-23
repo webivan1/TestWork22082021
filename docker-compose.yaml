@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  hotels-php-cli:
+    build:
+      context: ./backend
+      dockerfile: docker/php-cli/Dockerfile
+    container_name: hotels-php-cli
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: hotels-pgsql
+      DB_PORT: 5432
+      DB_DATABASE: hotels
+      DB_USERNAME: user
+      DB_PASSWORD: secret
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - hotels-pgsql
+    networks:
+      - hotels
+
+  hotels-php-fpm:
+    build:
+      context: ./backend
+      dockerfile: docker/php-fpm/Dockerfile
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - hotels-pgsql
+    networks:
+      - hotels
+
+  hotels-pgsql:
+    image: postgres:13.2-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: hotels
+    container_name: hotels-pgsql
+    restart: unless-stopped
+    volumes:
+      - hotels-storage:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    networks:
+      - hotels
+
+  hotels-api-nginx:
+    build:
+      context: ./backend
+      dockerfile: docker/nginx/Dockerfile
+    restart: on-failure
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - hotels-php-fpm
+      - hotels-php-cli
+    networks:
+      - hotels
+
+networks:
+  hotels:
+    driver: bridge
+
+volumes:
+  hotels-storage:
