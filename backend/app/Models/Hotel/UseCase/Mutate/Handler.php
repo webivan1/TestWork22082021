@@ -42,6 +42,10 @@ class Handler
 
     public function remove(Hotel $model): void
     {
+        if ($model->image) {
+
+        }
+
         $this->repository->delete($model->id);
     }
 }

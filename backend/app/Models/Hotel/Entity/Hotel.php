@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Storage;
  * @property integer|null $stars
  * @property float|null $latitude
  * @property float|null $longitude
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class Hotel extends Model
 {
@@ -38,18 +40,12 @@ class Hotel extends Model
         'longitude'
     ];
 
-    public function getImageAttribute($value): string
+    public function toArray(): array
     {
-        return env('APP_URL') . Storage::url($value);
-    }
-
-    public function getCreatedAtAttribute($value): string
-    {
-        return (new \DateTime($value))->format('d-m-Y H:i');
-    }
-
-    public function getUpdatedAtAttribute($value): string
-    {
-        return (new \DateTime($value))->format('d-m-Y H:i');
+        return array_merge(parent::toArray(), [
+            'image' => env('APP_URL') . Storage::url($this->image),
+            'created_at' => $this->created_at->format('d-m-Y H:i'),
+            'updated_at' => $this->updated_at->format('d-m-Y H:i'),
+        ]);
     }
 }
