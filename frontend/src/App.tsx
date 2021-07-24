@@ -10,6 +10,10 @@ export const App: FC = () => {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/hotels" component={Home} />
+          <Route path="/hotel/create" component={Home} />
+          <Route path="/hotel/:id/edit" component={Home} />
+          <Route path="/hotel/:id/view" component={Home} />
         </Switch>
       </Router>
     </div>

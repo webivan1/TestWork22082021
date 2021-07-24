@@ -1,8 +1,8 @@
 import { HotelType } from '../types'
 
 export enum HotelResponseStatus {
-  'error' = 'error',
-  'success' = 'success',
+  error = 'error',
+  success = 'success',
 }
 
 export type HotelFormStateType = {

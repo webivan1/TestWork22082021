@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { HotelsPaginationInfoType, HotelsStateType } from './types'
+import { HotelRemoveResponseStatus, HotelsPaginationInfoType, HotelsStateType } from './types'
 import { AppThunk } from '../../index'
-import { fetchHotelsApi } from './api'
+import { fetchHotelsApi, removeHotelApi } from './api'
+import { HotelIdType } from '../types'
 
 const initialState: HotelsStateType = {
   error: null,
@@ -43,6 +44,25 @@ export const fetchHotelsAsync =
       dispatch(startFetching())
       const info = await fetchHotelsApi(page)
       dispatch(setInfo(info))
+    } catch (e) {
+      dispatch(setError(e.message))
+    } finally {
+      dispatch(stopFetching())
+    }
+  }
+
+export const removeHotelAsync =
+  (id: HotelIdType): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(startFetching())
+      const response = await removeHotelApi(id)
+      if (response.status === HotelRemoveResponseStatus.error) {
+        throw new Error(response.errorMessage)
+      } else {
+        // update list and reset pagination
+        await fetchHotelsAsync()
+      }
     } catch (e) {
       dispatch(setError(e.message))
     } finally {

@@ -12,3 +12,17 @@ export type HotelsStateType = {
   loading: boolean
   info: HotelsPaginationInfoType
 }
+
+export enum HotelRemoveResponseStatus {
+  error = 'error',
+  success = 'success',
+}
+
+export type HotelRemoveResponseType =
+  | {
+      status: HotelRemoveResponseStatus.error
+      errorMessage: string
+    }
+  | {
+      status: HotelRemoveResponseStatus.success
+    }
