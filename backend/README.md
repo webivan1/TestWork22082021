@@ -1,6 +1,14 @@
 ### Create env
 
 - `cd backend && cp .env.example .env`
+```
+DB_CONNECTION=pgsql
+DB_HOST=hotels-pgsql
+DB_PORT=5432
+DB_DATABASE=hotels
+DB_USERNAME=user
+DB_PASSWORD=secret
+```
   
 ### Install
 

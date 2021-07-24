@@ -1,10 +1,16 @@
-import { HotelType } from '../types'
+import { HotelIdType } from '../types'
+
+export type HotelItemType = {
+  id: HotelIdType
+  name: string
+  city: string
+}
 
 export type HotelsPaginationInfoType = {
   total: number
   per_page: number
   current_page: number
-  data: HotelType[]
+  data: HotelItemType[]
 }
 
 export type HotelsStateType = {

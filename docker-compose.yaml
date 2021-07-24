@@ -6,13 +6,6 @@ services:
       context: ./backend
       dockerfile: docker/php-cli/Dockerfile
     container_name: hotels-php-cli
-    environment:
-      DB_CONNECTION: pgsql
-      DB_HOST: hotels-pgsql
-      DB_PORT: 5432
-      DB_DATABASE: hotels
-      DB_USERNAME: user
-      DB_PASSWORD: secret
     volumes:
       - ./backend:/app
     depends_on:

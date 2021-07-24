@@ -36,7 +36,15 @@ The design is completely up to you but don't worry too much about it, something 
 
 ### Backend
 
-- `cd backend && cp .env.example .env`
+- `cd backend && cp .env.example .env` and add db configuration bellow
+```
+DB_CONNECTION=pgsql
+DB_HOST=hotels-pgsql
+DB_PORT=5432
+DB_DATABASE=hotels
+DB_USERNAME=user
+DB_PASSWORD=secret
+```
 - `docker-compose run --rm hotels-php-cli composer install`
 - `docker-compose run --rm hotels-php-cli php artisan key:generate`
 - `docker-compose run --rm hotels-php-cli php artisan storage:link`
