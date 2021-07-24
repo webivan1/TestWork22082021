@@ -50,8 +50,8 @@ class HotelController extends Controller
             $command = $this->getCommandByRequest($request);
 
             if ($request->file('image')) {
-                Storage::delete($hotel->image);
                 $command->image = $request->file('image')->store('images');
+                Storage::delete($hotel->image);
             }
 
             $handler->update($hotel, $command);
@@ -68,7 +68,9 @@ class HotelController extends Controller
     public function destroy(Hotel $hotel, UseCase\Mutate\Handler $handler): JsonResponse
     {
         try {
+            $image = $hotel->image;
             $handler->remove($hotel);
+            empty($image) ?: Storage::delete($image);
             return response()->json(['status' => 'success']);
         } catch (\DomainException $e) {
             return $this->jsonErrorResponse($e->getMessage());

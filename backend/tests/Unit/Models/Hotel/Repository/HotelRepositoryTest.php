@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Models\Hotel\Repository;
 
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Models\Hotel\Entity\Value\Image;
 use App\Models\Hotel\Entity\Value\Address;
 use App\Models\Hotel\Entity\Value\Description;
@@ -13,48 +14,50 @@ use App\Models\Hotel\Entity\Value\Stars;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Hotel\Entity\Hotel;
 use App\Models\Hotel\Contract\HotelRepositoryContract;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class HotelRepositoryTest extends TestCase
 {
     use DatabaseTransactions;
 
-    private Hotel $model;
-    private HotelRepositoryContract $repo;
-
-    public function setUp(): void
+    private function getRepo(): HotelRepositoryContract
     {
-        $this->repo = $this->createApplication()->make(HotelRepositoryContract::class);
-        $this->model = Hotel::factory()->createOne();
+        return $this->app->make(HotelRepositoryContract::class);
+    }
+
+    private function getModel(): Hotel
+    {
+        return Hotel::factory()->createOne();
     }
 
     public function testFindById()
     {
-        $model = $this->repo->findById($this->model->id);
-        $this->assertEquals($model->id, $this->model->id);
+        $item = $this->getModel();
+        $model = $this->getRepo()->findById($item->id);
+        $this->assertEquals($model->id, $item->id);
     }
 
     public function testFindAll()
     {
-        $paginator = $this->repo->findAll();
+        $paginator = $this->getRepo()->findAll();
         $this->assertInstanceOf(LengthAwarePaginator::class, $paginator);
-        $this->assertTrue($paginator->total() > 0);
     }
 
     public function testIsExistByNameAndAddress()
     {
-        $result = $this->repo->isExistByNameAndAddress($this->model->name, $this->model->address);
+        $item = $this->getModel();
+
+        $result = $this->getRepo()->isExistByNameAndAddress($item->name, $item->address);
         $this->assertTrue($result);
 
-        $result = $this->repo->isExistByNameAndAddress($this->model->name . '-test', $this->model->address . '-test');
+        $result = $this->getRepo()->isExistByNameAndAddress($item->name . '-test', $item->address . '-test');
         $this->assertFalse($result);
     }
 
     public function testUpdate()
     {
-        $model = clone $this->model;
+        $model = $this->getModel();
 
-        $this->repo->update(
+        $this->getRepo()->update(
             $model,
             new Name($name = 'test' . mt_rand(1000, 10000)),
             new Address(
@@ -66,7 +69,7 @@ class HotelRepositoryTest extends TestCase
             new Description($description = 'new Description')
         );
 
-        $this->assertEquals($model->id, $this->model->id);
+        $this->assertNotEmpty($model->id);
         $this->assertEquals($model->name, $name);
         $this->assertEquals($model->city, $city);
         $this->assertEquals($model->address, $address);
@@ -80,7 +83,7 @@ class HotelRepositoryTest extends TestCase
     {
         $randNum = mt_rand(1000, 10000);
 
-        $model = $this->repo->create(
+        $model = $this->getRepo()->create(
             new Name($name = 'new-test-' . $randNum),
             new Address(
                 $city = 'City' . $randNum,
@@ -93,7 +96,7 @@ class HotelRepositoryTest extends TestCase
 
         $this->assertIsInt($model->id);
 
-        $result = $this->repo->findById($model->id);
+        $result = $this->getRepo()->findById($model->id);
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result->id, $model->id);
@@ -108,14 +111,15 @@ class HotelRepositoryTest extends TestCase
 
     public function testDelete()
     {
-        $id = $this->model->id;
+        $model = $this->getModel();
+        $id = $model->id;
 
-        $model = $this->repo->findById($id);
+        $model = $this->getRepo()->findById($id);
         $this->assertNotEmpty($model);
 
-        $this->repo->delete($id);
+        $this->getRepo()->delete($id);
 
-        $model = $this->repo->findById($id);
+        $model = $this->getRepo()->findById($id);
         $this->assertEmpty($model);
     }
 }

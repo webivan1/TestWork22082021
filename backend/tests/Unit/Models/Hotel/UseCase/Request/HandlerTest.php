@@ -15,17 +15,15 @@ class HandlerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function setUp(): void
-    {
-        Hotel::factory(10)->create();
-    }
-
     public function testGetList()
     {
+        $handler = $this->app->make(Handler::class);
+
+        Hotel::factory(10)->create();
+
         $command = new Command();
         $command->page = 1;
 
-        $handler = $this->createApplication()->make(Handler::class);
         $paginator = $handler->getList($command);
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $paginator);

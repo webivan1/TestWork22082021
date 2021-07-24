@@ -37,15 +37,21 @@ class Hotel extends Model
         'description',
         'stars',
         'latitude',
-        'longitude'
+        'longitude',
+        'created_at',
+        'updated_at'
     ];
+
+    public $timestamps = true;
 
     public function toArray(): array
     {
-        return array_merge(parent::toArray(), [
-            'image' => env('APP_URL') . Storage::url($this->image),
-            'created_at' => $this->created_at->format('d-m-Y H:i'),
-            'updated_at' => $this->updated_at->format('d-m-Y H:i'),
-        ]);
+        return array_merge(parent::toArray(), array_filter([
+            'image' => $this->image ? env('APP_URL') . Storage::url($this->image) : null,
+            'created_at' => $this->created_at ? $this->created_at->format('d-m-Y H:i') : null,
+            'updated_at' => $this->updated_at ? $this->updated_at->format('d-m-Y H:i') : null,
+            'latitude' => $this->latitude ? (float) $this->latitude : null,
+            'longitude' => $this->longitude ? (float) $this->longitude : null,
+        ]));
     }
 }

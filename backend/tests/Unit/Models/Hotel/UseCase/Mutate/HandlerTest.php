@@ -8,15 +8,16 @@ use App\Models\Hotel\Contract\HotelRepositoryContract;
 use App\Models\Hotel\Entity\Hotel;
 use App\Models\Hotel\UseCase\Mutate\Command;
 use App\Models\Hotel\UseCase\Mutate\Handler;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class HandlerTest extends TestCase
 {
-    private Handler $handler;
+    use DatabaseTransactions;
 
-    public function setUp(): void
+    private function getHandler(): Handler
     {
-        $this->handler = $this->createApplication()->make(Handler::class);
+        return $this->app->make(Handler::class);
     }
 
     public function testCreate()
@@ -26,7 +27,7 @@ class HandlerTest extends TestCase
 
         $command = $this->getCommand($fake);
 
-        $model = $this->handler->create($command);
+        $model = $this->getHandler()->create($command);
 
         $this->assertNotEmpty($model->id);
         $this->assertEquals($command->name, $model->name);
@@ -49,7 +50,7 @@ class HandlerTest extends TestCase
         $command->address = 'New Address ' . mt_rand(1000, 10000);
         $command->description = 'New Description ' . mt_rand(1000, 10000);
 
-        $this->handler->update($copyModel, $command);
+        $this->getHandler()->update($copyModel, $command);
 
         $this->assertEquals($model->id, $copyModel->id);
         $this->assertEquals($command->name, $copyModel->name);
@@ -62,9 +63,9 @@ class HandlerTest extends TestCase
         /** @var Hotel $model */
         $model = Hotel::factory()->createOne();
         $id = $model->id;
-        $repo = $this->createApplication()->make(HotelRepositoryContract::class);
+        $repo = $this->app->make(HotelRepositoryContract::class);
 
-        $this->handler->remove($model);
+        $this->getHandler()->remove($model);
 
         $model = $repo->findById($id);
 
