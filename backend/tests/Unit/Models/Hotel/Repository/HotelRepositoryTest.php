@@ -53,6 +53,17 @@ class HotelRepositoryTest extends TestCase
         $this->assertFalse($result);
     }
 
+    public function testFindByNameAndAddress()
+    {
+        $item = $this->getModel();
+
+        $result = $this->getRepo()->findByNameAndAddress($item->name, $item->address);
+        $this->assertNotEmpty($result);
+
+        $result = $this->getRepo()->findByNameAndAddress($item->name . '-test', $item->address . '-test');
+        $this->assertEmpty($result);
+    }
+
     public function testUpdate()
     {
         $model = $this->getModel();

@@ -16,6 +16,7 @@ interface HotelRepositoryContract
 {
     public function findById(int $id): ?Hotel;
     public function findAll(int $page = 1): LengthAwarePaginator;
+    public function findByNameAndAddress(string $name, string $address): ?Hotel;
     public function isExistByNameAndAddress(string $name, string $address): bool;
     public function create(Name $name, Address $address, Image $image, Stars $stars, Description $description): Hotel;
     public function update(Hotel $model, Name $name, Address $address, ?Image $image, Stars $stars, Description $description): void;

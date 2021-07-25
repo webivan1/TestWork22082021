@@ -39,6 +39,18 @@ class HandlerTest extends TestCase
         $this->assertEquals($command->longitude, $model->longitude);
     }
 
+    public function testAlreadyExists()
+    {
+        $this->expectException(\DomainException::class);
+
+        /** @var Hotel $fake */
+        $model = Hotel::factory()->createOne();
+
+        $command = $this->getCommand($model);
+
+        $this->getHandler()->create($command);
+    }
+
     public function testUpdate()
     {
         /** @var Hotel $model */

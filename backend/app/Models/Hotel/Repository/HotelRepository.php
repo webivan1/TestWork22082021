@@ -33,6 +33,13 @@ class HotelRepository extends BaseRepository implements HotelRepositoryContract
             ->whereAddress($address)->exists();
     }
 
+    public function findByNameAndAddress(string $name, string $address): ?Hotel
+    {
+        return $this->model->newQuery()
+            ->whereName($name)
+            ->whereAddress($address)->first();
+    }
+
     public function findAll(int $page = 1, int $perPage = 10): LengthAwarePaginator
     {
         return $this->model->newQuery()->orderBy('created_at', 'desc')

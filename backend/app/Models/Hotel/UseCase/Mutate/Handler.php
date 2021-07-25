@@ -19,13 +19,17 @@ class Handler
 
     public function create(Command $command): Hotel
     {
-        return $this->repository->create(
-            new Value\Name($command->name),
-            new Value\Address($command->city, $command->address, $command->latitude, $command->longitude),
-            new Value\Image($command->image),
-            new Value\Stars($command->stars),
-            new Value\Description($command->description)
-        );
+        $name = new Value\Name($command->name);
+        $address = new Value\Address($command->city, $command->address, $command->latitude, $command->longitude);
+        $image = new Value\Image($command->image);
+        $stars = new Value\Stars($command->stars);
+        $desc = new Value\Description($command->description);
+
+        if ($this->repository->isExistByNameAndAddress($name->getName(), $address->getAddress())) {
+            throw new \DomainException('This hotel is already exists');
+        }
+
+        return $this->repository->create($name, $address, $image, $stars, $desc);
     }
 
     public function update(Hotel $model, Command $command): void
