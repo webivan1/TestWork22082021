@@ -7,7 +7,7 @@ export type HotelType = {
   city: string
   address: string
   description: string
-  stars: number
-  latitude: number
-  longitude: number
+  stars?: number
+  latitude?: number
+  longitude?: number
 }

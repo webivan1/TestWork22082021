@@ -3,7 +3,7 @@ import http from '../../../services/http'
 import { HotelIdType } from '../types'
 
 export const fetchHotelsApi = (currentPage: number): Promise<HotelsPaginationInfoType> => {
-  return http.get<HotelsPaginationInfoType>(`/hotels?page=${currentPage}`).then(({ data }) => data)
+  return http.get<HotelsPaginationInfoType>(`/hotel?page=${currentPage}`).then(({ data }) => data)
 }
 
 export const removeHotelApi = (id: HotelIdType): Promise<HotelRemoveResponseType> => {

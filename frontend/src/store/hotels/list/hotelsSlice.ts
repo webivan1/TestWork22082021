@@ -59,10 +59,9 @@ export const removeHotelAsync =
       const response = await removeHotelApi(id)
       if (response.status === HotelRemoveResponseStatus.error) {
         throw new Error(response.errorMessage)
-      } else {
-        // update list and reset pagination
-        await fetchHotelsAsync()
       }
+      // update list and reset pagination
+      await dispatch(fetchHotelsAsync())
     } catch (e) {
       dispatch(setError(e.message))
     } finally {

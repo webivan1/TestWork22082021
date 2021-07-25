@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { HotelFormStateType, HotelFormType, HotelResponseStatus } from './types'
+import { HotelFormStateType, HotelResponseStatus } from './types'
 import { AppThunk } from '../../index'
 import { createHotelApi, updateHotelApi } from './api'
-import { HotelIdType } from '../types'
+import { HotelIdType, HotelType } from '../types'
+import { setModel } from '../detail/hotelDetailSlice'
 
 const initialState: HotelFormStateType = {
   error: null,
@@ -39,7 +40,7 @@ export const hotelFormSlice = createSlice({
 export const { startFetching, stopFetching, setError, setSuccess, reset } = hotelFormSlice.actions
 
 export const createHotelAsync =
-  (form: FormData | HotelFormType): AppThunk =>
+  (form: FormData, handler?: (model: HotelType) => void): AppThunk =>
   async (dispatch) => {
     try {
       dispatch(startFetching())
@@ -48,6 +49,9 @@ export const createHotelAsync =
         throw new Error(response.errorMessage)
       } else {
         dispatch(setSuccess(`You have created a new hotel ${response.model.name}`))
+        if (handler) {
+          handler(response.model)
+        }
       }
     } catch (e) {
       dispatch(setError(e.message))
@@ -57,7 +61,7 @@ export const createHotelAsync =
   }
 
 export const updateHotelAsync =
-  (id: HotelIdType, form: FormData | HotelFormType): AppThunk =>
+  (id: HotelIdType, form: FormData): AppThunk =>
   async (dispatch) => {
     try {
       dispatch(startFetching())
@@ -66,6 +70,7 @@ export const updateHotelAsync =
         throw new Error(response.errorMessage)
       } else {
         dispatch(setSuccess(`You have updated a hotel ${response.model.name}`))
+        dispatch(setModel(response.model))
       }
     } catch (e) {
       dispatch(setError(e.message))

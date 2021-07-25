@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\HotelCreateRequest;
+use App\Http\Requests\HotelFormRequest;
 use App\Http\Requests\HotelListRequest;
-use App\Http\Requests\HotelUpdateRequest;
 use App\Models\Hotel\Entity\Hotel;
 use App\Models\Hotel\UseCase;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +21,7 @@ class HotelController extends Controller
         return response()->json($handler->getList($command));
     }
 
-    public function store(HotelCreateRequest $request, UseCase\Mutate\Handler $handler): JsonResponse
+    public function store(HotelFormRequest $request, UseCase\Mutate\Handler $handler): JsonResponse
     {
         try {
             $command = $this->getCommandByRequest($request);
@@ -44,7 +43,7 @@ class HotelController extends Controller
         return response()->json($hotel);
     }
 
-    public function update(HotelUpdateRequest $request, Hotel $hotel, UseCase\Mutate\Handler $handler): JsonResponse
+    public function update(HotelFormRequest $request, Hotel $hotel, UseCase\Mutate\Handler $handler): JsonResponse
     {
         try {
             $command = $this->getCommandByRequest($request);
@@ -83,10 +82,19 @@ class HotelController extends Controller
         $command->name = $request->input('name');
         $command->city = $request->input('city');
         $command->address = $request->input('address');
-        $command->latitude = $request->input('latitude');
-        $command->longitude = $request->input('longitude');
-        $command->stars = $request->input('stars');
         $command->description = $request->input('description');
+
+        if ($lat = $request->input('latitude')) {
+            $command->latitude = (float)$lat;
+        }
+
+        if ($lon = $request->input('longitude')) {
+            $command->longitude = (float)$lon;
+        }
+
+        if ($stars = $request->input('stars')) {
+            $command->stars = (int)$stars;
+        }
 
         return $command;
     }

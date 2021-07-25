@@ -46,8 +46,14 @@ class HotelRepository extends BaseRepository implements HotelRepositoryContract
             ->paginate(10, ['id', 'name', 'city']);
     }
 
-    public function update(Hotel $model, Name $name, Address $address, ?Image $image, Stars $stars, Description $description): void
-    {
+    public function update(
+        Hotel $model,
+        Name $name,
+        Address $address,
+        ?Image $image,
+        Stars $stars,
+        Description $description
+    ): void {
         $model->name = $name->getName();
         $model->city = $address->getCity();
         $model->address = $address->getAddress();

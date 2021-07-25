@@ -19,6 +19,13 @@ interface HotelRepositoryContract
     public function findByNameAndAddress(string $name, string $address): ?Hotel;
     public function isExistByNameAndAddress(string $name, string $address): bool;
     public function create(Name $name, Address $address, Image $image, Stars $stars, Description $description): Hotel;
-    public function update(Hotel $model, Name $name, Address $address, ?Image $image, Stars $stars, Description $description): void;
+    public function update(
+        Hotel $model,
+        Name $name,
+        Address $address,
+        ?Image $image,
+        Stars $stars,
+        Description $description
+    ): void;
     public function delete(int $id): void;
 }

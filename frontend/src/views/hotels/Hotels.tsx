@@ -1,18 +1,19 @@
 import React, { FC } from 'react'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { fetchHotelsAsync } from '../../store/hotels/list/hotelsSlice'
+import { useAppSelector } from '../../store/hooks'
+import { Loading } from '../../components/loading/Loading'
+import { HotelGrid } from '../../components/hotels/list/HotelGrid'
 
 export const Hotels: FC = () => {
-  const dispatch = useAppDispatch()
-  const {
-    loading,
-    error,
-    info: { total, data },
-  } = useAppSelector((state) => state.hotels)
+  const { loading } = useAppSelector((state) => state.hotels)
 
-  const fetchList = async (page: number = 1) => {
-    await fetchHotelsAsync(page)
-  }
+  return (
+    <>
+      <div className="d-flex align-items-center mb-3">
+        <div className="me-2 h4 my-0">Hotels</div>
+        <Loading size="sm" show={loading} />
+      </div>
 
-  return <div>List of hotels</div>
+      <HotelGrid />
+    </>
+  )
 }

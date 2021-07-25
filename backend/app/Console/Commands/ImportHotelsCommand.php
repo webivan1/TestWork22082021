@@ -83,7 +83,7 @@ class ImportHotelsCommand extends Command
     {
         $extOrigin = strtolower((string)pathinfo($urlImage, PATHINFO_EXTENSION));
 
-        if (!in_array($extOrigin, ['webp', 'gif', 'png', 'jpg', 'jpeg'])) {
+        if (!in_array($extOrigin, ['webp', 'gif', 'png', 'jpg', 'jpeg', 'svg'])) {
             $extOrigin = $this->defaultExt;
         }
 
