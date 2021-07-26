@@ -55,19 +55,18 @@ class HandlerTest extends TestCase
     {
         /** @var Hotel $model */
         $model = Hotel::factory()->createOne();
-        $copyModel = clone $model;
 
         $command = $this->getCommand($model);
         $command->name = 'New Name ' . mt_rand(1000, 10000);
         $command->address = 'New Address ' . mt_rand(1000, 10000);
         $command->description = 'New Description ' . mt_rand(1000, 10000);
 
-        $this->getHandler()->update($copyModel, $command);
+        $newModel = $this->getHandler()->update($model->id, $command);
 
-        $this->assertEquals($model->id, $copyModel->id);
-        $this->assertEquals($command->name, $copyModel->name);
-        $this->assertEquals($command->address, $copyModel->address);
-        $this->assertEquals($command->description, $copyModel->description);
+        $this->assertEquals($model->id, $newModel->id);
+        $this->assertEquals($command->name, $newModel->name);
+        $this->assertEquals($command->address, $newModel->address);
+        $this->assertEquals($command->description, $newModel->description);
     }
 
     public function testRemove()
@@ -77,7 +76,7 @@ class HandlerTest extends TestCase
         $id = $model->id;
         $repo = $this->app->make(HotelRepositoryContract::class);
 
-        $this->getHandler()->remove($model);
+        $this->getHandler()->remove($model->id);
 
         $model = $repo->findById($id);
 

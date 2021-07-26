@@ -53,11 +53,11 @@ class HotelController extends Controller
                 Storage::delete($hotel->image);
             }
 
-            $handler->update($hotel, $command);
+            $newHotel = $handler->update($hotel->id, $command);
 
             return response()->json([
                 'status' => 'success',
-                'model' => $hotel
+                'model' => $newHotel
             ]);
         } catch (\DomainException $e) {
             return $this->jsonErrorResponse($e->getMessage());
@@ -68,7 +68,7 @@ class HotelController extends Controller
     {
         try {
             $image = $hotel->image;
-            $handler->remove($hotel);
+            $handler->remove($hotel->id);
             empty($image) ?: Storage::delete($image);
             return response()->json(['status' => 'success']);
         } catch (\DomainException $e) {

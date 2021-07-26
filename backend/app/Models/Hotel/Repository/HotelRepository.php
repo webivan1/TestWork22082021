@@ -91,12 +91,8 @@ class HotelRepository extends BaseRepository implements HotelRepositoryContract
         return $model;
     }
 
-    public function delete(int $id): void
+    public function delete(Hotel $model): void
     {
-        if (!$model = $this->findById($id)) {
-            throw new \DomainException('This hotel does not exists');
-        }
-
         if (!$model->delete()) {
             throw new \DomainException('Error delete hotel ' . $model->name);
         }

@@ -27,5 +27,5 @@ interface HotelRepositoryContract
         Stars $stars,
         Description $description
     ): void;
-    public function delete(int $id): void;
+    public function delete(Hotel $model): void;
 }

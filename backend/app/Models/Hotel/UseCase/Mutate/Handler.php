@@ -32,8 +32,12 @@ class Handler
         return $this->repository->create($name, $address, $image, $stars, $desc);
     }
 
-    public function update(Hotel $model, Command $command): void
+    public function update(int $id, Command $command): Hotel
     {
+        if (!$model = $this->repository->findById($id)) {
+            throw new \DomainException('This hotel does not exists');
+        }
+
         $this->repository->update(
             $model,
             new Value\Name($command->name),
@@ -42,10 +46,16 @@ class Handler
             new Value\Stars($command->stars),
             new Value\Description($command->description)
         );
+
+        return $model;
     }
 
-    public function remove(Hotel $model): void
+    public function remove(int $id): void
     {
-        $this->repository->delete($model->id);
+        if (!$model = $this->repository->findById($id)) {
+            throw new \DomainException('This hotel does not exists');
+        }
+
+        $this->repository->delete($model);
     }
 }

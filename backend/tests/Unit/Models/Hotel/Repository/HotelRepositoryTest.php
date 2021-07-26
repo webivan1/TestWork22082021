@@ -128,7 +128,7 @@ class HotelRepositoryTest extends TestCase
         $model = $this->getRepo()->findById($id);
         $this->assertNotEmpty($model);
 
-        $this->getRepo()->delete($id);
+        $this->getRepo()->delete($model);
 
         $model = $this->getRepo()->findById($id);
         $this->assertEmpty($model);
